@@ -9,6 +9,7 @@
     <div v-if="fingerprint" class="ks">
       <h3>OpenPGP</h3>
       <p>Key Fingerprint: {{ fingerprint }}</p>
+      <a :href="blob(askey)" :download="fingerprint + '.asc'">Public Key</a>
 
       <div v-for="key in Object.keys(ksstuff)" :key="key">
         <p v-if="key == 'email'">
@@ -89,6 +90,7 @@ export default Vue.extend({
       text: '',
       ksstuff: {},
       kbstuff: {},
+      askey: '',
       fingerprint: '',
     }
   },
@@ -123,6 +125,8 @@ export default Vue.extend({
         delete y.fromStream
         this.ksstuff = y
       }
+      // @ts-ignore
+      this.askey = publicKeyArmored
       axios
         .get(
           'https://keybase.io/_/api/1.0/user/lookup.json?key_fingerprint=' +
@@ -137,6 +141,13 @@ export default Vue.extend({
     })()
   },
   methods: {
+    blob(x: string) {
+      const myBlob = new Blob([x], {
+        type: 'application/pgp-keys',
+      })
+      const url = URL.createObjectURL(myBlob)
+      return url
+    },
     onSubmit(event: Event) {
       event.preventDefault()
       this.$router.push(this.text)
