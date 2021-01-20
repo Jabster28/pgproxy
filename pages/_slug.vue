@@ -96,7 +96,6 @@ export default Vue.extend({
   },
   mounted() {
     this.text = this.slug
-    console.log(this.slug)
     let fingerprint
     try {
       // @ts-ignore
@@ -104,9 +103,8 @@ export default Vue.extend({
         .exec(this.slug.replaceAll(/\s/g, ''))[2]
         .toUpperCase()
     } catch (e) {
-      console.log(2)
+      console.log(e)
     }
-    console.log(this.fingerprint)
     if (!fingerprint) return
     this.fingerprint = fingerprint
     ;(async () => {
@@ -134,7 +132,6 @@ export default Vue.extend({
         )
         .then((e) => {
           if (e.data.them[0]) {
-            console.log(e.data.them[0])
             this.kbstuff = e.data.them[0]
           }
         })
