@@ -3,7 +3,7 @@
     <div>
       <h1 class="title">pgproxy</h1>
       <div class="links">
-        <a class="button--green" @click="register"> Register </a>
+        <button class="button--green" @click="register">Register</button>
         <a
           href="openpgp4fpr:8603C4DEFFB2244E3969F1BEB1B1CC5F0F0F0578"
           target="_blank"
