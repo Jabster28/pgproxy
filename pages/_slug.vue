@@ -1,7 +1,12 @@
 <template>
   <div class="container">
-    <input v-model="slug" type="text" />
-    <div class="ks">
+    <b-form @submit="onSubmit">
+      <b-form-input
+        v-model="text"
+        placeholder="Enter a PGP fingerprint"
+      ></b-form-input>
+    </b-form>
+    <div v-if="fingerprint" class="ks">
       <h3>OpenPGP</h3>
       <p>Key Fingerprint: {{ fingerprint }}</p>
 
@@ -18,6 +23,7 @@
         <p v-else>{{ key }}: {{ ksstuff[key] }}</p>
       </div>
     </div>
+    <div v-else>No keys found.</div>
     <div v-if="kbstuff.id" class="kb">
       <h3>Keybase</h3>
       <p>
@@ -53,6 +59,14 @@
           >
             {{ kbstuff.proofs_summary.all[key].nametag }}
           </a>
+          <sub
+            ><a
+              target="_blank"
+              rel="noopener noreferrer"
+              :href="kbstuff.proofs_summary.all[key].proof_url"
+              >(proof)</a
+            ></sub
+          >
         </p>
       </div>
     </div>
@@ -72,18 +86,26 @@ export default Vue.extend({
   data() {
     return {
       slug: '',
+      text: '',
       ksstuff: {},
       kbstuff: {},
       fingerprint: '',
     }
   },
   mounted() {
+    this.text = this.slug
     console.log(this.slug)
-    // @ts-ignore
-    const fingerprint = /^(openpgp4fpr:)?([0-9A-F ]*)$/gim
-      .exec(this.slug.replaceAll(/\s/g, ''))[2]
-      .toUpperCase()
+    let fingerprint
+    try {
+      // @ts-ignore
+      fingerprint = /^(openpgp4fpr:)?([0-9A-F ]*)$/gim
+        .exec(this.slug.replaceAll(/\s/g, ''))[2]
+        .toUpperCase()
+    } catch (e) {
+      console.log(2)
+    }
     console.log(this.fingerprint)
+    if (!fingerprint) return
     this.fingerprint = fingerprint
     ;(async () => {
       const hkp = new openpgp.HKP('https://keys.openpgp.org') // Defaults to https://keyserver.ubuntu.com, or pass another keyserver URL as a string
@@ -115,6 +137,11 @@ export default Vue.extend({
     })()
   },
   methods: {
+    onSubmit(event: Event) {
+      event.preventDefault()
+      this.$router.push(this.text)
+    },
+
     register() {
       navigator.registerProtocolHandler(
         'openpgp4fpr',
