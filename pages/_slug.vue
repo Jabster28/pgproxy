@@ -135,6 +135,7 @@ export default Vue.extend({
         delete y.fromStream
         this.ksstuff = y
       } else {
+        // @ts-ignore
         this.ksstuff = null
       }
       // @ts-ignore
