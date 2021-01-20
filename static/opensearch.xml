@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<OpenSearchDescription xmlns="http://a9.com/-/spec/opensearch/1.1/"
+  xmlns:moz="http://mozilla.org/2006/browser/search/">
+  <ShortName>PGProxy</ShortName>
+  <Description>Get info from a PGP fingerprint</Description>
+  <Tags>pgp openpgp keybase</Tags>
+  <Contact>justynboyer@gmail.com</Contact>
+  <Url type="text/html" template="https://pgproxy.web.app/{searchTerms}"/>
+  <Url type="application/opensearchdescription+xml" rel="self" template="https://pgproxy.web.app/opensearch.xml" />
+  <LongName>PGProxy Fingerprint Search</LongName>
+  <Query role="example" searchTerms="8603 C4DE FFB2 244E 3969 F1BE B1B1 CC5F 0F0F 0578" />
+  <SearchForm>https://pgproxy.web.app/Enter%20Fingerprint%20Here</SearchForm>
+  <moz:SearchForm>https://pgproxy.web.app/Enter%20Fingerprint%20Here</moz:SearchForm>
+  <Developer>Jabster28</Developer>
+  <SyndicationRight>open</SyndicationRight>
+  <AdultContent>false</AdultContent>
+  <Language>en-us</Language>
+  <OutputEncoding>UTF-8</OutputEncoding>
+  <InputEncoding>UTF-8</InputEncoding>
+</OpenSearchDescription>
