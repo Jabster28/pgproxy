@@ -1,17 +1,16 @@
 <template>
   <div class="container">
     <div>
-      <Logo />
       <h1 class="title">pgproxy</h1>
       <div class="links">
         <a class="button--green" @click="register"> Register </a>
         <a
-          href="https://github.com/Jabster28/pgproxy"
+          href="openpgp4fpr:8603C4DEFFB2244E3969F1BEB1B1CC5F0F0F0578"
           target="_blank"
           rel="noopener noreferrer"
           class="button--grey"
         >
-          GitHub
+          Test
         </a>
       </div>
     </div>
@@ -26,7 +25,7 @@ export default Vue.extend({
     register() {
       navigator.registerProtocolHandler(
         'openpgp4fpr',
-        'https://pgproxy.web.app/res/%s',
+        'https://pgproxy.web.app/%s',
         'Custom Keyserver Lookup'
       )
     },
