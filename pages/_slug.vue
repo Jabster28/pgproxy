@@ -9,9 +9,15 @@
     <div v-if="fingerprint" class="ks">
       <h3>OpenPGP</h3>
       <p>Key Fingerprint: {{ fingerprint }}</p>
+      <img :src="img" alt="PGP fingerprint as a QR Code" /><br />
       <a :href="blob(askey)" :download="fingerprint + '.asc'">Public Key</a>
-
-      <div v-for="key in Object.keys(ksstuff)" :key="key">
+      <div v-if="!ksstuff">
+        <em
+          ><strong>Warning!</strong> This key has no valid User IDs! It cannot
+          be imported!</em
+        >
+      </div>
+      <div v-for="key in Object.keys(ksstuff)" v-else :key="key">
         <p v-if="key == 'email'">
           {{ key }}:
           <a
@@ -78,6 +84,7 @@
 import Vue from 'vue'
 import * as openpgp from 'openpgp'
 import axios from 'axios'
+import qrcode from 'qrcode-generator'
 
 export default Vue.extend({
   asyncData({ params }) {
@@ -88,6 +95,7 @@ export default Vue.extend({
     return {
       slug: '',
       text: '',
+      img: '',
       ksstuff: {},
       kbstuff: {},
       askey: '',
@@ -99,7 +107,7 @@ export default Vue.extend({
     let fingerprint
     try {
       // @ts-ignore
-      fingerprint = /^(openpgp4fpr:)?([0-9A-F ]*)$/gim
+      fingerprint = /^(openpgp4fpr:)?([0-9A-F]{40})$/gim
         .exec(this.slug.replaceAll(/\s/g, ''))[2]
         .toUpperCase()
     } catch (e) {
@@ -107,6 +115,10 @@ export default Vue.extend({
     }
     if (!fingerprint) return
     this.fingerprint = fingerprint
+    const qr = qrcode(0, 'L')
+    qr.addData('OPENPGP4FPR:' + fingerprint)
+    qr.make()
+    this.img = qr.createDataURL(6)
     ;(async () => {
       const hkp = new openpgp.HKP('https://keys.openpgp.org') // Defaults to https://keyserver.ubuntu.com, or pass another keyserver URL as a string
       // @ts-ignore
@@ -122,6 +134,8 @@ export default Vue.extend({
         delete y.packets
         delete y.fromStream
         this.ksstuff = y
+      } else {
+        this.ksstuff = null
       }
       // @ts-ignore
       this.askey = publicKeyArmored
@@ -166,10 +180,21 @@ export default Vue.extend({
 .ks {
   margin: 10px;
 }
+.ks a {
+  color: #ffffff;
+  font-weight: 600;
+}
 .kb {
   background-color: #ff6f21;
   border-radius: 5px;
   padding: 20px 10px;
+}
+.kb a {
+  color: #ffffff;
+  font-weight: 600;
+}
+img {
+  border-radius: 7px;
 }
 .ks {
   background-color: #4aa3ff;
