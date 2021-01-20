@@ -8339,7 +8339,7 @@ q@^1.1.2, q@^1.5.1:
   resolved "https://registry.yarnpkg.com/q/-/q-1.5.1.tgz#7e32f75b41381291d04611f1bf14109ac00651d7"
   integrity sha1-fjL3W0E4EpHQRhHxvxQQmsAGUdc=
 
-qrcode-generator@^1.4.4:
+qrcode-generator@1.4.4:
   version "1.4.4"
   resolved "https://registry.yarnpkg.com/qrcode-generator/-/qrcode-generator-1.4.4.tgz#63f771224854759329a99048806a53ed278740e7"
   integrity sha512-HM7yY8O2ilqhmULxGMpcHSF1EhJJ9yBj8gvDEuZ6M+KGJ0YY2hKpnXvRD+hZPLrDVck3ExIGhmPtSdcjC+guuw==
@@ -9276,7 +9276,7 @@ stackframe@^1.1.1:
   resolved "https://registry.yarnpkg.com/stackframe/-/stackframe-1.2.0.tgz#52429492d63c62eb989804c11552e3d22e779303"
   integrity sha512-GrdeshiRmS1YLMYgzF16olf2jJ/IzxXY9lhKOskuVziubpTYcYqyOwYeJKzQkwy7uN0fYSsbsC4RQaXf9LCrYA==
 
-standard-version@^9.1.0:
+standard-version@9.1.0:
   version "9.1.0"
   resolved "https://registry.yarnpkg.com/standard-version/-/standard-version-9.1.0.tgz#07589469324d967ffe665fa86ef612949a858a80"
   integrity sha512-EJcbKUGKBuHjiDSUL5XjPhT1KGVM+UCvv/ti70fHnJwJyJqTSJWl0mWj/Wj0WwsoskyvKWURESzBsZmCCMUZzg==
