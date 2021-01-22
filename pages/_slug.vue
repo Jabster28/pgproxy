@@ -8,73 +8,87 @@
     </b-form>
     <div v-if="fingerprint" class="ks">
       <h3>OpenPGP</h3>
-      <p>Key Fingerprint: {{ fingerprint }}</p>
-      <img :src="img" alt="PGP fingerprint as a QR Code" /><br />
-      <a :href="blob(askey)" :download="fingerprint + '.asc'">Public Key</a>
-      <div v-if="!ksstuff">
-        <em
-          ><strong>Warning!</strong> This key has no valid User IDs! It cannot
-          be imported!</em
-        >
-      </div>
-      <div v-for="key in Object.keys(ksstuff)" v-else :key="key">
-        <p v-if="key == 'email'">
-          {{ key }}:
-          <a
-            target="_blank"
-            rel="noopener noreferrer"
-            :href="`mailto:${ksstuff[key]}`"
-            >{{ ksstuff[key] }}</a
+      <b-spinner v-if="!ks"></b-spinner>
+      <div v-else>
+        <div v-if="ksstuff">
+          <p>Key Fingerprint: {{ fingerprint }}</p>
+          <img :src="ksimg" alt="PGP fingerprint as a QR Code" /><br />
+          <a :href="blob(askey)" :download="fingerprint + '.asc'">Public Key</a>
+        </div>
+        <div v-if="kserr">
+          <em>{{ kserr }}</em>
+        </div>
+        <div v-else-if="!ksstuff">
+          <em
+            ><strong>Warning!</strong> This key has no valid User IDs! It cannot
+            be imported!</em
           >
-        </p>
-        <p v-else>{{ key }}: {{ ksstuff[key] }}</p>
+        </div>
+        <div v-for="key in Object.keys(ksstuff)" v-else :key="key">
+          <p v-if="key == 'email'">
+            {{ key }}:
+            <a
+              target="_blank"
+              rel="noopener noreferrer"
+              :href="`mailto:${ksstuff[key]}`"
+              >{{ ksstuff[key] }}</a
+            >
+          </p>
+          <p v-else>{{ key }}: {{ ksstuff[key] }}</p>
+        </div>
       </div>
     </div>
     <div v-else>No keys found.</div>
     <div v-if="kbstuff.id" class="kb">
       <h3>Keybase</h3>
-      <p>
-        Username:
-        <a
-          target="_blank"
-          rel="noopener noreferrer"
-          :href="`https://keybase.io/${kbstuff.basics.username}`"
-          >{{ kbstuff.basics.username }}</a
-        >
-      </p>
-      <p>Bio: {{ kbstuff.profile.bio }}</p>
-      <p>Location: {{ kbstuff.profile.location }}</p>
-      <p>Full Name: {{ kbstuff.profile.full_name }}</p>
-      <div
-        v-for="key in Object.keys(kbstuff.cryptocurrency_addresses)"
-        :key="key"
-      >
+      <b-spinner v-if="!kb"></b-spinner>
+      <div v-else>
+        <!-- <img :src="kbimg" alt="PGP fingerprint as a QR Code" /><br /> -->
         <p>
-          {{ key }} address:
-          {{ kbstuff.cryptocurrency_addresses[key][0].address }}
-        </p>
-      </div>
-      <div v-for="key in Object.keys(kbstuff.proofs_summary.all)" :key="key">
-        <p>
-          {{
-            kbstuff.proofs_summary.all[key].presentation_group.split(':').pop()
-          }}:
+          Username:
           <a
             target="_blank"
             rel="noopener noreferrer"
-            :href="kbstuff.proofs_summary.all[key].service_url"
-          >
-            {{ kbstuff.proofs_summary.all[key].nametag }}
-          </a>
-          <sub
-            ><a
-              target="_blank"
-              rel="noopener noreferrer"
-              :href="kbstuff.proofs_summary.all[key].proof_url"
-              >(proof)</a
-            ></sub
+            :href="`https://keybase.io/${kbstuff.basics.username}`"
+            >{{ kbstuff.basics.username }}</a
           >
         </p>
+        <p>Bio: {{ kbstuff.profile.bio }}</p>
+        <p>Location: {{ kbstuff.profile.location }}</p>
+        <p>Full Name: {{ kbstuff.profile.full_name }}</p>
+        <div
+          v-for="key in Object.keys(kbstuff.cryptocurrency_addresses)"
+          :key="key"
+        >
+          <p>
+            {{ key }} address:
+            {{ kbstuff.cryptocurrency_addresses[key][0].address }}
+          </p>
+        </div>
+        <div v-for="key in Object.keys(kbstuff.proofs_summary.all)" :key="key">
+          <p>
+            {{
+              kbstuff.proofs_summary.all[key].presentation_group
+                .split(':')
+                .pop()
+            }}:
+            <a
+              target="_blank"
+              rel="noopener noreferrer"
+              :href="kbstuff.proofs_summary.all[key].service_url"
+            >
+              {{ kbstuff.proofs_summary.all[key].nametag }}
+            </a>
+            <sub
+              ><a
+                target="_blank"
+                rel="noopener noreferrer"
+                :href="kbstuff.proofs_summary.all[key].proof_url"
+                >(proof)</a
+              ></sub
+            >
+          </p>
+        </div>
       </div>
     </div>
   </div>
@@ -93,9 +107,13 @@ export default Vue.extend({
   },
   data() {
     return {
+      ks: false,
+      kb: false,
       slug: '',
       text: '',
-      img: '',
+      ksimg: '',
+      kserr: '',
+      kbimg: '',
       ksstuff: {},
       kbstuff: {},
       askey: '',
@@ -115,40 +133,77 @@ export default Vue.extend({
     }
     if (!fingerprint) return
     this.fingerprint = fingerprint
-    const qr = qrcode(0, 'L')
-    qr.addData('OPENPGP4FPR:' + fingerprint)
-    qr.make()
-    this.img = qr.createDataURL(6)
-    ;(async () => {
-      const hkp = new openpgp.HKP('https://keys.openpgp.org') // Defaults to https://keyserver.ubuntu.com, or pass another keyserver URL as a string
-      // @ts-ignore
-      const publicKeyArmored = await hkp.lookup({
-        query: '0x' + fingerprint,
-      })
-      const x = await openpgp.key.readArmored(publicKeyArmored)
-      // @ts-ignore
-      if (!x.err) {
+    const ksqr = qrcode(0, 'L')
+    ksqr.addData('OPENPGP4FPR:' + fingerprint)
+    ksqr.make()
+    this.ksimg = ksqr.createDataURL(6)
+    ;(() => {
+      const hkp = new openpgp.HKP(
+        'https://corsthing.herokuapp.com/https://keyserver.ubuntu.com'
+      ) // Defaults to https://keyserver.ubuntu.com, or pass another keyserver URL as a string
+      hkp
         // @ts-ignore
-        const y = { ...x.keys[0].users[0].userId }
-        delete y.tag
-        delete y.packets
-        delete y.fromStream
-        this.ksstuff = y
-      } else {
-        // @ts-ignore
-        this.ksstuff = null
-      }
-      // @ts-ignore
-      this.askey = publicKeyArmored
+        .lookup({
+          query: '0x' + fingerprint,
+        })
+        .then(async (publicKeyArmored) => {
+          this.ks = true
+          if (!publicKeyArmored) {
+            this.ksstuff = ''
+            this.kserr = 'No keys found.'
+            return
+          }
+          const x = await openpgp.key.readArmored(publicKeyArmored)
+          // @ts-ignore
+          if (!x.err) {
+            // @ts-ignore
+            const y = { ...x.keys[0].users[0].userId }
+            delete y.tag
+            delete y.packets
+            delete y.fromStream
+            this.ksstuff = y
+          } else {
+            console.log(x.err)
+            this.ksstuff = ''
+          }
+          // @ts-ignore
+          this.askey = publicKeyArmored
+        })
+        .catch((e) => {
+          this.ks = true
+          console.warn('ew')
+          console.error(e)
+        })
+
       axios
         .get(
           'https://keybase.io/_/api/1.0/user/lookup.json?key_fingerprint=' +
             fingerprint.toLowerCase()
         )
-        .then((e) => {
+        .then(async (e) => {
+          this.kb = true
           if (e.data.them[0]) {
             this.kbstuff = e.data.them[0]
+            const a = await openpgp.key.readArmored(
+              this.kbstuff.public_keys.primary.bundle
+            )
+            const kbqr = qrcode(0, 'L')
+            kbqr.addData(
+              'OPENPGP4FPR:' +
+                (() =>
+                  Array.prototype.map
+                    .call(a.keys[0].keyPacket.fingerprint, (x) =>
+                      ('00' + x.toString(16)).slice(-2)
+                    )
+                    .join(''))().toUpperCase()
+            )
+            kbqr.make()
+            this.kbimg = kbqr.createDataURL(6)
           }
+        })
+        .catch((e) => {
+          console.log(e)
+          this.kb = true
         })
     })()
   },

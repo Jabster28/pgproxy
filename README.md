@@ -1,6 +1,6 @@
 # pgproxy
 
-A web app for translating PGP fingerprints information from [Keybase](https://keybase.io) and [OpenPGP's Key Server](https://keys.openpgp.org).
+A web app for translating PGP fingerprints information from [Keybase](https://keybase.io) and [Ubuntu's Key Server](https://keyserver.ubuntu.com/).
 
 ## Build Setup
 
