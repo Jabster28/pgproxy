@@ -1,19 +1,28 @@
 <template>
   <div class="container">
-    <div>
-      <h1 class="title">pgproxy</h1>
-      <div class="links">
-        <button class="button--green" @click="register">Register</button>
-        <a
-          href="openpgp4fpr:8603C4DEFFB2244E3969F1BEB1B1CC5F0F0F0578"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="button--grey"
-        >
-          Test
-        </a>
+    <div class="based">
+      <div>
+        <h1 class="title">pgproxy</h1>
+        <br />
+        <div class="links">
+          <button class="button--green" @click="register">Register</button>
+          <a
+            href="openpgp4fpr:8603C4DEFFB2244E3969F1BEB1B1CC5F0F0F0578"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="button--grey"
+          >
+            Test
+          </a>
+        </div>
       </div>
     </div>
+    <footer>
+      running commit hash
+      <a :href="`https://github.com/jabster28/pgproxy/commit/${commitSha}`">
+        {{ commitSha }}
+      </a>
+    </footer>
   </div>
 </template>
 
@@ -21,6 +30,14 @@
 import Vue from 'vue'
 
 export default Vue.extend({
+  data() {
+    return {
+      commitSha: process.env.NUXT_ENV_CURRENT_GIT_SHA,
+    }
+  },
+  mounted() {
+    console.log(`Running on git hash (${this.commitSha})`)
+  },
   methods: {
     register() {
       navigator.registerProtocolHandler(
@@ -34,7 +51,7 @@ export default Vue.extend({
 </script>
 
 <style>
-.container {
+.based {
   margin: 0 auto;
   min-height: 100vh;
   display: flex;
