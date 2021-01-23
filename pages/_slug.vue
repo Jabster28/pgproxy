@@ -185,6 +185,7 @@ export default Vue.extend({
           if (e.data.them[0]) {
             this.kbstuff = e.data.them[0]
             const a = await openpgp.key.readArmored(
+              // @ts-ignore
               this.kbstuff.public_keys.primary.bundle
             )
             const kbqr = qrcode(0, 'L')
@@ -192,6 +193,7 @@ export default Vue.extend({
               'OPENPGP4FPR:' +
                 (() =>
                   Array.prototype.map
+                    // @ts-ignore
                     .call(a.keys[0].keyPacket.fingerprint, (x) =>
                       ('00' + x.toString(16)).slice(-2)
                     )
