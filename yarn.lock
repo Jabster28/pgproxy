@@ -1628,10 +1628,10 @@
   resolved "https://registry.yarnpkg.com/@types/normalize-package-data/-/normalize-package-data-2.4.0.tgz#e486d0d97396d79beedd0a6e33f4534ff6b4973e"
   integrity sha512-f5j5b/Gf71L+dbqxIpQ4Z2WlmI/mPJ0fOkGGmFgtb6sAu97EPczzbS3/tJKxmcYDj55OX6ssqwDAWOHIYDRDGA==
 
-"@types/openpgp@4.4.14":
-  version "4.4.14"
-  resolved "https://registry.yarnpkg.com/@types/openpgp/-/openpgp-4.4.14.tgz#6dbeaad05ce2a46b5cb696348bf759b6f887fe0d"
-  integrity sha512-bPTsAmoqABBT5Ow75cgLsPj6AlCWL1HBPCzNOUxQRkxlKHC1DuB7yO+4lRl4xnqubkGkI6VnHYgHxE0XpQQqJg==
+"@types/openpgp@4.4.18":
+  version "4.4.18"
+  resolved "https://registry.yarnpkg.com/@types/openpgp/-/openpgp-4.4.18.tgz#b523e7a97646069756a01faf0569e198fe4d0dc1"
+  integrity sha512-8PGX6byEni97ZRRp2fVguSk4hbw4e+0vd8XHmyUt0+PjRoMcOZHsn+StQQjfo/wA/3kf/KCbV6I4pwmSC5/LKg==
   dependencies:
     "@types/bn.js" "*"
 
@@ -7123,10 +7123,10 @@ opener@1.5.2, opener@^1.5.1:
   resolved "https://registry.yarnpkg.com/opener/-/opener-1.5.2.tgz#5d37e1f35077b9dcac4301372271afdeb2a13598"
   integrity sha512-ur5UIdyw5Y7yEj9wLzhqXiy6GZ3Mwx0yGI+5sMn2r0N0v3cKJvUmFH5yPP+WXh9e0xfyzyJX95D8l088DNFj7A==
 
-openpgp@4.10.9:
-  version "4.10.9"
-  resolved "https://registry.yarnpkg.com/openpgp/-/openpgp-4.10.9.tgz#fe61cc821fe6d9dd00036d66593b5882d50a9b1d"
-  integrity sha512-rW+q8j0wMKhXPB8s/DtLGHNWtYIgM5xElaq7RWaqQVRf9yaKMptjPq5QImG+ACpJJm6LdbN5ll/vr9Z2OWWZvg==
+openpgp@4.10.10:
+  version "4.10.10"
+  resolved "https://registry.yarnpkg.com/openpgp/-/openpgp-4.10.10.tgz#65b58d24466c278120c7f2d1ebc88ef9b15d6361"
+  integrity sha512-Ub48OogGPjNsr0G/wnJ/SyAQzt/tfcXZTWVZdjKFpXCQV1Ca+upFdSPPkBlGG3lb9EQGOKZJ2tzYNH6ZyKMkDQ==
   dependencies:
     asn1.js "^5.0.0"
     node-fetch "^2.1.2"
