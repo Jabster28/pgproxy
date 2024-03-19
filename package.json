@@ -26,7 +26,7 @@
     "axios": "0.21.1",
     "bootstrap": "4.6.0",
     "bootstrap-vue": "2.21.2",
-    "core-js": "3.8.3",
+    "core-js": "3.36.1",
     "nuxt": "2.14.12",
     "openpgp": "4.10.9",
     "qrcode-generator": "1.4.4"
